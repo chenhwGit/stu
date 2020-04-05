@@ -1,0 +1,47 @@
+{"properties": [
+  {
+    "name": "project.avatar-max-size",
+    "type": "java.lang.String",
+    "description": "A description for 'project.avatar-max-size'"
+  },
+  {
+    "name": "project.avatar-types[0]",
+    "type": "java.lang.String",
+    "description": "A description for 'project.avatar-types[0]'"
+  },
+  {
+    "name": "project.avatar-types[1]",
+    "type": "java.lang.String",
+    "description": "A description for 'project.avatar-types[1]'"
+  },
+  {
+    "name": "project.avatar-types[0]",
+    "type": "java.lang.String",
+    "description": "A description for 'project.avatar-types[0]'"
+  },
+  {
+    "name": "project.avatar-types[2]",
+    "type": "java.lang.String",
+    "description": "A description for 'project.avatar-types[2]'"
+  },
+  {
+    "name": "project.avatar-types[2]",
+    "type": "java.lang.String",
+    "description": "A description for 'project.avatar-types[2]'"
+  },
+  {
+    "name": "project.avatar-types[2]",
+    "type": "java.lang.String",
+    "description": "A description for 'project.avatar-types[2]'"
+  },
+  {
+    "name": "project.avatar-types",
+    "type": "java.lang.String",
+    "description": "A description for 'project.avatar-types'"
+  },
+  {
+    "name": "project.address-max-size",
+    "type": "java.lang.String",
+    "description": "A description for 'project.address-max-size'"
+  }
+]}
