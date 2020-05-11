@@ -1,0 +1,26 @@
+-------------------------------------------------------------------------------
+Test set: cn.tedu.store.mapper.UserMapperTests
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.57 s <<< FAILURE! - in cn.tedu.store.mapper.UserMapperTests
+insert(cn.tedu.store.mapper.UserMapperTests)  Time elapsed: 0.391 s  <<< ERROR!
+org.springframework.dao.DuplicateKeyException: 
+
+### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'root' for key 'username'
+### The error may exist in file [D:\eclipse-workspace\store\target\classes\mappers\UserMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: insert   into t_user(   username,password,salt,gender,   phone,email,avatar,is_delete,   created_user,created_time,modified_user,modified_time   ) values(   ?,?,?,?,   ?,?,?,?,   ?,?,?,?   )
+### Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'root' for key 'username'
+; Duplicate entry 'root' for key 'username'; nested exception is java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'root' for key 'username'
+	at cn.tedu.store.mapper.UserMapperTests.insert(UserMapperTests.java:41)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'root' for key 'username'
+	at cn.tedu.store.mapper.UserMapperTests.insert(UserMapperTests.java:41)
+
+updateAvatarByUid(cn.tedu.store.mapper.UserMapperTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at cn.tedu.store.mapper.UserMapperTests.updateAvatarByUid(UserMapperTests.java:71)
+
+updatePasswordByUid(cn.tedu.store.mapper.UserMapperTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at cn.tedu.store.mapper.UserMapperTests.updatePasswordByUid(UserMapperTests.java:61)
+
