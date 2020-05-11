@@ -1,0 +1,144 @@
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">角色管理</h3>
+
+				<div class="box-tools">
+					<div class="input-group input-group-sm" style="width: 350px;">
+						<input type="text" name="table_search" id="searchNameId"
+							class="form-control pull-right" placeholder="角色名">
+
+						<div class="input-group-btn">
+							<button id="btn-search" type="button" class="btn btn-default btn-search">
+                                <i class="fa fa-search"></i>
+							</button>
+							<button id="btn-add" type="button" class="btn btn-default btn-add">添加</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body table-responsive no-padding">
+				<form>
+				  <table class="table table-hover">
+					<thead>
+						<tr>
+						    <th>序号</th>
+							<th>角色名称</th>
+							<th>备注</th>
+							<th>创建时间</th>
+							<th>修改时间</th>
+							<th>创建用户</th>
+							<th>修改用户</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="tbodyId">
+					</tbody>
+				  </table>
+				</form>
+			</div>
+			<!-- /.box-body -->
+			<div id="pageId" class="box-footer clearfix">
+            </div>
+		</div>
+		<!-- /.box -->
+	</div>
+</div>
+<script src="js/page.js"></script>
+<script type="text/javascript">
+// 获取分页数据的url
+var page_record_url="/role/findSysRole";
+var queryName="name";
+
+$(function(){
+	// 调用一个方法，实现数据展示
+	initPage(page_record_url, queryName);
+	// 清空mainContentId上绑定的roleData，区分添加和更新操作
+	$("#mainContentId").removeData();
+	// 为添加按钮添加点击事件
+	$("#btn-add").click(function(){
+		var url="/sys/role_edit";
+		$("#mainContentId").load(url);
+	});
+	
+	// $("#tbodyId").on("click",".btn-update",findEditPage);
+})
+
+function findEditPage(item){
+    // 弹出提示对话框
+    var flag=confirm("请确认是否修改当前角色记录？");
+    // 否：return
+    if(flag==false){
+        return;
+    }
+  	// console.log($(this)) // 获取当前window对象 
+    // console.log($(item)) // 获取当前a标签
+    // 获取当前角色对应的id 
+    var roleData=$(item).parents("tr").data("roleData");
+    // console.log(roleData);
+    // 将角色数据绑定到mainContentId组件上
+    $("#mainContentId").data("roleData",roleData);
+    // 请求role_edit.html
+    var url="sys/role_edit";
+    $("#mainContentId").load(url,function(){
+        // 修改role_edit.html的title为 修改角色
+        $(".box-title").html("修改角色");   
+    });
+}
+
+function removeSysRole(id){
+    // 弹出确认提示框
+    var flag=confirm("请确认是否删除该角色？");
+    // 判断是否点击了取消
+    if(flag==false){
+        // 是：return
+        return; 
+    }
+
+    // 获取当前delete对应的roleId，作为请求参数
+    var roleId=id;
+    var url="/role/removeSysRole"
+    var params={"roleId":roleId};
+    // 发送AJAX请求
+    $.post(url,params,function(result){
+        // 判断收到响应数据的state   
+        if(result.state==20){
+            alert("删除成功");
+            initPage(page_record_url, queryName);//刷新列表
+        }else{
+            alert(result.message);
+        }
+    });
+}
+
+function createRow(record){
+	var row="<tr>"+
+	    "<td>"+record.id+"</td>"+
+		"<td>"+record.name+"</td>"+
+		"<td>"+record.note+"</td>"+
+		"<td>"+record.createdTime+"</td>"+
+		"<td>"+record.modifiedTime+"</td>"+
+		"<td>"+record.createdUser+"</td>"+
+		"<td>"+record.modifiedUser+"</td>"+
+		"<td><a class='btn-delete' onclick='removeSysRole("+record.id+")'>delete</a>"+
+		    " <a class='btn-update' onclick='findEditPage(this)'>update</a></td>"+
+	"</tr>";
+	var obj=$(row);
+	// 向<tr>对应的dom对象上绑定当前行的数据
+	obj.data("roleData",record);
+	return obj;
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
