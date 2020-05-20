@@ -1,0 +1,202 @@
+<!-- Horizontal Form -->
+ <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title">添加角色</h3>
+      </div>
+      <!-- /.box-header -->
+      <!-- form start -->
+      <form class="form-horizontal">
+        <div class="box-body">
+          <div class="form-group">
+            <label for="nameId" class="col-sm-2 control-label">名称</label>
+
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="name" id="nameId" placeholder="名称">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="noteId" class="col-sm-2 control-label">描述</label>
+
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="note" id="noteId" placeholder="描述">
+            </div>
+          </div>
+          <div class="form-group">
+				<label class="col-sm-2 control-label">授权</label>
+				<div class="col-sm-10">
+						<ul id="menuTree" class="ztree"></ul>
+				</div>
+		  </div>
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <button type="button" id="btn-cancel" class="btn btn-default btn-cancel">Cancel</button>
+          <button type="button" id="btn-save" class="btn btn-info pull-right btn-save">Save</button>
+        </div>
+        <!-- /.box-footer -->
+      </form>
+    </div>
+<script type="text/javascript" src="bower_components/ztree/jquery.ztree.all.min.js"></script>
+<script type="text/javascript">
+
+$(function(){
+	// 显示授权位置的菜单节点
+	showMenuList();
+	// 为Save和Cancel按钮添加点击事件
+	$("#btn-save").click(doSaveOrUpdate);
+	$("#btn-cancel").click(doCancel);
+});
+
+//更新操作前回填表单
+function initEditForm(roleData){
+	// 回填普通表单
+	$("#nameId").val(roleData.name);
+	$("#noteId").val(roleData.note);
+	// 回填菜单列表
+	// 1. 展开菜单列表
+	zTree.expandAll(true);
+	// 2.获取角色关联的所有菜单id
+	var url="role/findMenuByRoleId"
+	var params={"roleId":roleData.id}
+	$.getJSON(url,params,function(result){
+		if(result.state==20){
+			// 3.勾选对应的菜单项
+			var menuIds=result.data;
+			for(var index in menuIds){
+				var menuId=menuIds[index];
+				// 获取menuId对应的菜单节点
+				var menuNode=zTree.getNodeByParam("id",menuId);
+				// 设置该节点为勾选状态
+				// 
+				zTree.checkNode(menuNode,// 被设置的节点
+						true, // true-勾选  false-取消勾选
+						false // false 不联动勾选父子级节点
+						);
+			}
+		}else{
+			alert(result.message);
+		}
+	});
+}
+
+function doSaveOrUpdate(){
+	// 获取表单信息
+	var params=getFormData();
+	// 进行必要的前端验证
+	if(params.name==undefined || params.name==''){
+		alert("请添加角色名称");
+		return;
+	}
+	if(params.note==undefined || params.note==''){
+		alert("请添加角色描述");
+		return;
+	}
+	if(params.menuIds==undefined || params.menuIds.length==0){
+		alert("请至少选择一项权限");
+		return;
+	}
+	// 提交表单信息
+	var insertUrl="/role/saveSysRole";
+	var updateUrl="/role/modifySysRole";
+
+	var url=insertUrl;// 默认执行添加操作
+	// 从mainContentId上获取绑定的角色信息
+	var roleData=$("#mainContentId").data("roleData");
+	// 判断当前是否是更新操作
+	if(roleData!=undefined){
+		url=updateUrl;
+		params.id=roleData.id; // 向请求参数中添加角色id
+	}
+	
+	$.post(url,params,function(result){
+		// 根据结果提示信息
+		if(result.state==20){
+			alert("操作成功！");
+			doCancel();
+		}else{
+			alert(result.message);
+		}
+	});
+}
+
+function getFormData(){
+	var params={
+		"name":$("#nameId").val(),
+		"note":$("#noteId").val()
+	}
+	var menuIds=[];// 声明保存menuId的数组
+	// 获取被勾选的菜单节点
+	var checkNodes=zTree.getCheckedNodes(true);
+	// 遍历获取节点的id，添加到menuIds中
+	for(var index in checkNodes){
+		menuIds.push(checkNodes[index].id);
+	}
+	// 将得到的菜单id数组添加到params上
+	params.menuIds=menuIds.toString();
+	return params;
+}
+
+function doCancel(){
+	var url="/sys/role_list"
+	$("#mainContentId").load(url);
+}
+
+
+
+var zTree; // 声明一个变量保存zTree对象
+// zTree节点配置
+var setting ={
+	check:{
+		enable:true,
+		chkboxType:{ // 设置勾选节点是否会影响父子节点
+			"Y":"s", // 勾选父节点影响子节点
+			"N":"s" // 取消勾选父节点影响子节点
+		}
+	},
+	data:{
+		simpleData:{
+			enable:true,
+			idKey:"id",
+			pIdKey:"parentId",
+			rootPId:null
+		}
+	}
+}
+
+function showMenuList(){
+	var url="/menu/findMenuNode";
+	// 发送AJAX请求菜单列表数据
+	$.getJSON(url,function(result){
+		if(result.state==20){
+			// 在收到响应后，基于zTree的API显示菜单列表
+			// console.log(result.data);
+			zTree= $.fn.zTree.init(
+					$("#menuTree"), // 显示zTree的目标对象
+					setting, // zTree的配置对象
+					result.data // zTree中显示的数据
+					);
+			// 从mainContentId上获取绑定的角色信息
+			var roleData=$("#mainContentId").data("roleData");
+			// 判断当前是否是更新操作
+			if(roleData!=undefined){
+				// 回填表单需要在菜单列表生成完毕后再进行
+				// 这样才能保证菜单列表被正确展开和勾选
+				initEditForm(roleData);
+			}
+			// zTree.expandAll(true); // 展开所有节点
+		}else{
+			alert(result.message);
+		}
+	})
+}
+
+
+</script>
+    
+    
+    
+    
+    
+    
+    
+    

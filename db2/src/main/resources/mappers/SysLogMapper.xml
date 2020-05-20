@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.db.sys.mapper.SysLogMapper">
+
+	<!-- 添加日志记录 -->
+	<!-- Integer insertSysLog(SysLogDO sysLogDO) -->
+	<insert id="insertSysLog">
+		insert into sys_logs(
+			username, operation,
+			method, params, 
+			time, ip,
+			createdTime
+		)values(
+			#{username}, #{operation},
+			#{method}, #{params}, 
+			#{time}, #{ip},
+			now()
+		)
+	</insert>
+
+	<!-- 基于日志id删除日志记录 -->
+	<!-- Integer deleteSysLog(@Param("ids")Integer[] ids) -->
+	<delete id="deleteSysLog">
+		delete from 
+			sys_logs 
+		where 
+			id in 
+		<foreach collection="ids"
+			item="id" separator="," 
+			open="(" close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 封装复用的sql语句 -->
+	<sql id="queryWhereId">
+		<where>
+			<if test="username!=null and username!=''">
+				username like concat('%',#{username},'%')
+			</if>
+		</where>
+	</sql>
+      
+	<!-- 基于用户名查询总数据条数 -->
+	<!-- Integer getRowCount(@Param("username")String username) -->
+	<select id="getRowCount" resultType="java.lang.Integer">
+		select 
+			count(*) 
+		from 
+			sys_logs 
+		<include refid="queryWhereId"></include>
+	</select>
+
+	<!-- 基于用户名分页查询数据 -->
+	<!-- List<SysLogDO> getPageRecord(
+					@Param("username")String username,
+					@Param("recordIndex")Integer recordIndex,
+					@Param("pageSize")Integer pageSize) -->
+	<select id="getPageRecord" resultType="cn.tedu.db.sys.pojo.SysLogDO">
+		select 
+			id, username, operation, 
+			method, params, time,
+			ip, createdTime 
+		from 
+			sys_logs 
+		<include refid="queryWhereId"></include>
+		order by 
+			createdTime desc 
+		limit 
+			#{recordIndex}, #{pageSize}
+	</select>
+       
+</mapper>
