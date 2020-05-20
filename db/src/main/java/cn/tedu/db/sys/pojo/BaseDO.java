@@ -11,7 +11,6 @@ public class BaseDO implements Serializable{
 	private Date modifiedTime;
 	private String createdUser;
 	private String modifiedUser;
-	
 	public BaseDO() {
 		super();
 		// TODO Auto-generated constructor stub

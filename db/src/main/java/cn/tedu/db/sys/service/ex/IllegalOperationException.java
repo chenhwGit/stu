@@ -1,7 +1,7 @@
 package cn.tedu.db.sys.service.ex;
 
 /**
- *  更新菜单时，菜单id和parentId一致时抛出的异常
+ * 针对菜单项的parentId与当前id一致的情况
  */
 public class IllegalOperationException extends ServiceException {
 
@@ -32,5 +32,5 @@ public class IllegalOperationException extends ServiceException {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
-
+	
 }

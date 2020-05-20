@@ -2,7 +2,7 @@ package cn.tedu.db.sys.service.ex;
 
 /**
  *    查询到的总数据条数为0时抛出的异常
- * 
+ *    针对基于id查询到的菜单信息为null的情况
  */
 public class RecordNotFoundException extends ServiceException {
 

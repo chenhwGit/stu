@@ -2,6 +2,7 @@ package cn.tedu.db.sys.service.ex;
 
 /**
  * 传入方法的参数值为null，或者关键字段为空时抛出的异常
+ * 针对传入方法的sysMenuDO对象为null或者其中关键字段的值为空的情况
  */
 public class EmptyArgumentException extends ServiceException {
 

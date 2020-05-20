@@ -2,72 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.tedu.db.sys.mapper.SysRoleMapper">
-
-	<!-- 基于角色id查询所有的菜单id -->
-	<!-- List<Integer> listMenuIdByRoleId(@Param("roleIds")Integer[] roleIds) -->
-	<select id="listMenuIdByRoleId" resultType="java.lang.Integer">
-	    select 
-	        menu_id 
-	    from 
-	        sys_role_menus 
-	    where 
-	        role_id 
-	    in 
-	    <foreach collection="roleIds" 
-	        open="(" close=")"
-	        separator="," item="roleId">
-	        #{roleId}
-	    </foreach>
-	</select>
-
-	<!-- 列出所有角色的id和name -->
-	<!-- List<SysRoleDO> listAllSysRole() -->
-	<select id="listAllSysRole" resultType="cn.tedu.db.sys.pojo.SysRoleDO">
-	    select 
-	        id, name
-	    from 
-	        sys_roles
-	</select>
+	<!--复用的sql语句 -->
+	<sql id="queryWhereId">
+		<where>
+			<if test="name!=null and name!=''">
+				name like concat('%',#{name},'%')
+			</if>
+		</where>
+	</sql>
 	
-	<!-- 基于角色id查询角色数据数量 -->
-	<!-- Integer getRoleCount(@Param("roleIds")Integer[] roleIds) -->
-	<select id="getRoleCount" resultType="java.lang.Integer">
-	    select 
-	        count(*) 
-	    from 
-	        sys_roles 
-	    where id in 
-	    <foreach collection="roleIds" 
-	        open="(" close=")" 
-	        separator="," item="roleId">
-	        #{roleId}
-	    </foreach>
-	</select>
-
-
-
-	<!-- 基于角色id查询关联的菜单id -->
-	<!-- List<Integer> getMenuByRoleId(Integer roleId) -->
-	<select id="getMenuByRoleId" resultType="java.lang.Integer">
-	    select 
-	        menu_id
-	    from 
-	        sys_role_menus 
-	    where
-	        role_id=#{roleId}
-	</select>
-	
-	<!-- 更新角色数据 -->
-	<!-- Integer updateSysRole(SysRoleDO sysRoleDO) -->
-	<update id="updateSysRole">
-	    update 
-	        sys_roles 
-	    set 
-	        name=#{name}, note=#{note}, 
-	        modifiedTime=now(), modifiedUser=#{modifiedUser} 
-	    where 
-	        id=#{id}
-	</update>
 
 	<!-- 添加角色记录 -->
 	<!-- Integer insertSysRole(SysRoleDO sysRoleDO) -->
@@ -76,7 +19,7 @@
 	<insert id="insertSysRole" 
 	useGeneratedKeys="true" 
 	keyProperty="id">
-		insert into sys_roles(
+    	insert into sys_roles(
 			name, note,
 			createdTime, modifiedTime, 
 			createdUser, modifiedUser
@@ -86,100 +29,140 @@
 			#{createdUser}, #{modifiedUser}
 		)
 	</insert>
-	
+
+
 	<!-- 添加角色菜单关联记录 -->
-	<!-- Integer insertRoleMenus(@Param("roleId")Integer roleId, 
-							@Param("menuIds")Integer[] menuIds) -->
+	<!-- Integer insertRoleMenus(@Param("roleId")Integer roleId, @Param("menuIds")Integer[] menuIds) -->
 	<insert id="insertRoleMenus">
 		insert into sys_role_menus(
 			role_id, menu_id
 		)values 
-		<foreach collection="menuIds" 
-			separator="," item="menuId">
+		<foreach collection="menuIds" separator="," item="menuId">
 			(#{roleId},#{menuId})
 		</foreach>
 	</insert>
-
+	
+	
 	<!-- 基于角色id删除角色记录 -->
 	<!-- Integer deleteSysRole(Integer roleId) -->
 	<delete id="deleteSysRole">
-	    delete from 
-	        sys_roles 
-	    where
-	        id=#{roleId}
+   	 delete from 
+      	  sys_roles 
+   	 where
+      	  id=#{roleId}
 	</delete>
-	
+
 	<!-- 基于角色id删除角色菜单关联记录 -->
 	<!-- Integer deleteRoleMenu(Integer roleId) -->
 	<delete id="deleteRoleMenu">
-	    delete from 
-	        sys_role_menus 
-	    where
-	        role_id=#{roleId}
+		delete from 
+        	sys_role_menus 
+    	where
+        	role_id=#{roleId}
 	</delete>
-	
+
 	<!-- 基于角色id删除用户角色关联记录 -->
 	<!-- Integer deleteUserRole(Integer roleId) -->
 	<delete id="deleteUserRole">
-	    delete from 
-	        sys_user_roles 
-	    where
-	        role_id=#{roleId}
+    	delete from 
+       	 	sys_user_roles 
+    	where
+        	role_id=#{roleId}
 	</delete>
+	
+	
+	<!-- 更新角色数据   -->
+	<!--Integer updateSysRole(SysRoleDO sysRoleDO)   -->
+	<update id="updateSysRole">
+		update
+			sys_roles
+		set
+			name=#{name},note=#{note},
+			modifiedTime=now(),modifiedUser=#{modifiedUser}
+		where
+			id=#{id}
+	</update>
+	
+	
+	<!--基于角色名查询总数据条数 -->
+	<!-- Integer getRowCount(@Param("name") String name); -->
+	<select id="getRowCount" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			sys_roles
+			<include refid="queryWhereId"></include>
+	</select>
+	
+
+	<!-- 基于角色名分页查询角色记录 -->
+	<!-- List<SysRoleDO> getPageRecord(@Param("recordIndex")Integer recordIndex, 
+		@Param("pageSize")Integer pageSize, @Param("name") String name) -->
+	<select id="getPageRecord"
+		resultType="cn.tedu.db.sys.pojo.SysRoleDO">
+		select
+			*
+		from
+			sys_roles
+			<include refid="queryWhereId"></include>
+		limit
+			#{recordIndex},#{pageSize}
+	</select>
+	
+	<!--基于角色id查询关联的菜单id  -->
+	<!--  List<Integer> getMenuByRoleId(Integer roleId) -->
+	<select id="getMenuByRoleId" resultType="java.lang.Integer">
+		select
+			menu_id
+		from
+			sys_role_menus
+		where
+			role_id=#{roleId}
+	</select>
 	
 	<!-- 基于角色id查询角色菜单关联记录 -->
 	<!-- Integer getRoleMenuCount(Integer roleId) -->
 	<select id="getRoleMenuCount" resultType="java.lang.Integer">
-	    select 
-	        count(*) 
-	    from 
-	        sys_role_menus 
-	    where
-	        role_id=#{roleId}
-	</select>
-	
-	<!-- 基于角色id查询用户角色关联记录 -->
-	<!-- Integer getUserRoleCount(Integer roleId) -->
-	<select id="getUserRoleCount" resultType="java.lang.Integer">
-	    select 
-	        count(*) 
-	    from 
-	        sys_user_roles 
-	    where
-	        role_id=#{roleId}
-	</select>
-
-	<!-- 复用的sql语句 -->
-	<sql id="queryWhereId">
-		<where>
-			<if test="name!=null and name!=''">
-				name like concat('%',#{name},'%')
-			</if>
-		</where>
-	</sql>
-
-	<!-- 基于角色名查询总数据条数 -->
-	<!-- Integer getRowCount(@Param("name") String name) -->
-	<select id="getRowCount" resultType="java.lang.Integer">
 		select 
 			count(*) 
 		from 
-			sys_roles 
-		<include refid="queryWhereId"></include>
+			sys_role_menus 
+		where
+			role_id=#{roleId}
+	</select>
+
+	<!-- 基于角色id查询用户角色关联记录 -->
+	<!-- Integer getUserRoleCount(Integer roleId) -->
+	<select id="getUserRoleCount" resultType="java.lang.Integer">
+		select 
+			count(*) 
+		from 
+			sys_user_roles 
+		where
+        	role_id=#{roleId}
 	</select>
 	
-	<!-- 基于角色名分页查询角色记录 -->
-	<!-- List<SysRoleDO> getPageRecord(@Param("recordIndex")Integer recordIndex,
-										@Param("pageSize")Integer pageSize, 
-										@Param("name") String name) -->
-	<select id="getPageRecord" resultType="cn.tedu.db.sys.pojo.SysRoleDO">
-		select 
-			*
-		from 
-			sys_roles 
-		<include refid="queryWhereId"></include>
-		limit 
-			#{recordIndex}, #{pageSize}
+	
+	<!-- 列出所有角色的id和name -->
+	<!-- List<SysRoleDO> listAllSysRole() -->
+	<select id="listAllSysRole" resultType="cn.tedu.db.sys.pojo.SysRoleDO">  
+		select
+			id,name
+		from
+			sys_roles
 	</select>
-      
+	
+	<!-- 基于角色id查询角色数据数量 -->
+	<!-- Integer getRoleCount(@Param("roleIds")Integer[] roleIds) -->
+	<select id="getRoleCount" resultType="java.lang.Integer">
+		select
+			count(*)
+		from
+			sys_roles
+		where id in
+		<foreach collection="roleIds" open="(" close=")" separator="," item="roleId">
+			#{roleId}			
+		</foreach>
+	</select>
+
 </mapper>

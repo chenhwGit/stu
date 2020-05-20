@@ -1,7 +1,7 @@
 package cn.tedu.db.sys.service.ex;
 
 /**
- * 拟添加的用户名已存在时抛出的异常
+ *  针对当前用户使用的用户名已存在的情况
  */
 public class UsernameExistsException extends ServiceException {
 
@@ -12,8 +12,7 @@ public class UsernameExistsException extends ServiceException {
 		// TODO Auto-generated constructor stub
 	}
 
-	public UsernameExistsException(String message, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace) {
+	public UsernameExistsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub
 	}

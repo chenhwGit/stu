@@ -16,7 +16,6 @@ public class PageObjectVO<T> implements Serializable{
 	private Integer pageCurrent; // 当前页码
 	private Integer pageSize; // 每页的数据条数
 	private List<T> pageRecord; // 当前页的数据
-	
 	public PageObjectVO() {
 		super();
 		// TODO Auto-generated constructor stub

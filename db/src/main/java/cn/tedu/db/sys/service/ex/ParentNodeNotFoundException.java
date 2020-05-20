@@ -2,6 +2,7 @@ package cn.tedu.db.sys.service.ex;
 
 /**
  * 使用菜单id查询不到对应的记录时抛出的异常
+ * 针对使用父菜单id查询不到父菜单记录的情况
  */
 public class ParentNodeNotFoundException extends ServiceException {
 

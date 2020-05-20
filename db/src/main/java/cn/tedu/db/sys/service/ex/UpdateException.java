@@ -1,7 +1,7 @@
 package cn.tedu.db.sys.service.ex;
 
 /**
- * 更新操作返回值与预期不符时抛出的异常
+ *  针对更新操作返回值为0的情况
  */
 public class UpdateException extends ServiceException {
 

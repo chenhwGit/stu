@@ -2,27 +2,46 @@ package cn.tedu.db.sys.pojo;
 
 import java.util.Date;
 
-public class SysUserDO extends BaseDO{
+/**
+ * @author 作者：chen
+ * @email 邮箱：727424623@qq.com
+ * @version v.1.0 创建时间：下午2:39:46
+ * @description 描述：用户模块实体类
+ */
 
+//CREATE TABLE `sys_users` (
+//		  `id` int(11) NOT NULL AUTO_INCREMENT,
+//		  `username` varchar(50) NOT NULL COMMENT '用户名',
+//		  `password` varchar(100) DEFAULT NULL COMMENT '密码',
+//		  `salt` varchar(50) DEFAULT NULL COMMENT '盐  密码加密时前缀，使加密后的值不同',
+//		  `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
+//		  `mobile` varchar(100) DEFAULT NULL COMMENT '手机号',
+//		  `valid` tinyint(4) DEFAULT NULL COMMENT '状态  0：禁用   1：正常',
+//		  `deptId` int(11) DEFAULT NULL,
+//		  `createdTime` datetime DEFAULT NULL COMMENT '创建时间',
+//		  `modifiedTime` datetime DEFAULT NULL COMMENT '修改时间',
+//		  `createdUser` varchar(20) DEFAULT NULL COMMENT '创建用户',
+//		  `modifiedUser` varchar(20) DEFAULT NULL COMMENT '修改用户',
+//		  PRIMARY KEY (`id`),
+//		  UNIQUE KEY `username` (`username`)
+//) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='系统用户';
+public class SysUserDO extends BaseDO {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Integer id;
-	private String username;
-	private String password;
-	private String salt;
-	private String email;
-	private String mobile;
-	private Integer valid; // '状态  0：禁用   1：正常  默认值 ：1'
-	private Integer deptId;
+	private String username; // 用户名
+	private String password; // 密码
+	private String salt; // 盐 密码加密时前缀，使加密后的值不同
+	private String email;// 邮箱
+	private String mobile;// 手机号
+	private Integer valid;// 状态 0：禁用 1：正常
+	private Integer deptId;//
 	private String deptName;
+
 	public SysUserDO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	public SysUserDO(Date createdTime, Date modifiedTime, String createdUser, String modifiedUser) {
-		super(createdTime, modifiedTime, createdUser, modifiedUser);
-		// TODO Auto-generated constructor stub
-	}
+
 	public SysUserDO(Date createdTime, Date modifiedTime, String createdUser, String modifiedUser, Integer id,
 			String username, String password, String salt, String email, String mobile, Integer valid, Integer deptId,
 			String deptName) {
@@ -37,63 +56,7 @@ public class SysUserDO extends BaseDO{
 		this.deptId = deptId;
 		this.deptName = deptName;
 	}
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getSalt() {
-		return salt;
-	}
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getMobile() {
-		return mobile;
-	}
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-	public Integer getValid() {
-		return valid;
-	}
-	public void setValid(Integer valid) {
-		this.valid = valid;
-	}
-	public Integer getDeptId() {
-		return deptId;
-	}
-	public void setDeptId(Integer deptId) {
-		this.deptId = deptId;
-	}
-	public String getDeptName() {
-		return deptName;
-	}
-	public void setDeptName(String deptName) {
-		this.deptName = deptName;
-	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -109,6 +72,7 @@ public class SysUserDO extends BaseDO{
 		result = prime * result + ((valid == null) ? 0 : valid.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -165,6 +129,79 @@ public class SysUserDO extends BaseDO{
 			return false;
 		return true;
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public Integer getValid() {
+		return valid;
+	}
+
+	public void setValid(Integer valid) {
+		this.valid = valid;
+	}
+
+	public Integer getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(Integer deptId) {
+		this.deptId = deptId;
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
 	@Override
 	public String toString() {
 		return "SysUserDO [id=" + id + ", username=" + username + ", password=" + password + ", salt=" + salt

@@ -3,6 +3,7 @@ package cn.tedu.db.shiro.config;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -12,17 +13,23 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.apache.shiro.mgt.SecurityManager;
 
 import cn.tedu.db.shiro.realm.ShiroUserRealm;
 
+/**
+ * @author 作者：chen
+ * @email 邮箱：727424623@qq.com
+ * @version v.1.0 创建时间：上午10:30:27
+ * @description 描述：Shiro配置类
+ */
 @Configuration
 public class ShiroConfig {
-	@Bean
+
+    @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        // 过滤器配置 LinkedHashMap可以保证按照元素的添加顺序返回元素
+        // 过滤器配置
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         //配置退出过滤器,退出逻辑Shiro已经实现
         filterChainDefinitionMap.put("/logout", "logout");
@@ -60,7 +67,7 @@ public class ShiroConfig {
         // 对Shiro的Bean的生命周期进行管理
         return new LifecycleBeanPostProcessor();
     }
-    
+
     /**
      * 开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证
      * 配置以下两个bean(DefaultAdvisorAutoProxyCreator(可选)和AuthorizationAttributeSourceAdvisor)即可实现此功能
@@ -80,5 +87,4 @@ public class ShiroConfig {
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager());
         return authorizationAttributeSourceAdvisor;
     }
-
 }
